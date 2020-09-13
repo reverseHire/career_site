@@ -77,23 +77,10 @@ router.post('/', async (req,res) => {
     
 })
 
-// router.patch('/:userName', async (req,res) => {
-//     const candidateUserName = req.params.userName
-//     const candidate = getCandidateObj(req)
-//     try {
-//         const savedCandidate = await candidate.updateOne({userName: candidateUserName}, candidate)
-//         res.json(savedCandidate)
-//     } catch(err) {
-//         res.json({message: err})
-//     }
-    
-// })
-
 router.put('/:userName', async (req,res) => {
     const candidateObj = getCandidateObj(req)
-    const candidate = new Candidate(candidateObj)
     try {
-        const savedCandidate = await candidate.findOneAndReplace({userName: req.params.userName}, candidateObj)
+        const savedCandidate = await Candidate.replaceOne({userName: req.params.userName}, candidateObj)
         res.json(savedCandidate)
     } catch(err) {
         res.json({message: err})
