@@ -2,45 +2,47 @@ const express = require('express')
 const router = express.Router()
 
 const Candidate = require('../models/Candidate')
+const { candidateValidationRules, candidateRatingRule, validate } = require('./candidateValidator.js')
 
-function getCandidateObj(req) {
+
+function getCandidateObj(reqObj) {
     const workExperienceObj = []
     const educationObj = []
 
-    for(let i in req.body.workExperience) {
+    for(let i in reqObj.workExperience) {
         let workObj = {}
-        workObj.startDate = new Date(req.body.workExperience[i].startDate)
-        workObj.endDate = new Date(req.body.workExperience[i].endDate)
-        workObj.jobTitle = req.body.workExperience[i].jobTitle
-        workObj.description = req.body.workExperience[i].description
-        workObj.company = req.body.workExperience[i].company
+        workObj.startDate = new Date(reqObj.workExperience[i].startDate)
+        workObj.endDate = new Date(reqObj.workExperience[i].endDate)
+        workObj.jobTitle = reqObj.workExperience[i].jobTitle
+        workObj.description = reqObj.workExperience[i].description
+        workObj.company = reqObj.workExperience[i].company
         workExperienceObj.push(workObj)
     }
 
-    for(let i in req.body.education) {
+    for(let i in reqObj.education) {
         let eduObj = {}
-        eduObj.startDate = new Date(req.body.education[i].startDate)
-        eduObj.endDate = new Date(req.body.education[i].endDate)
-        eduObj.areaOfStudy = req.body.education[i].areaOfStudy
-        eduObj.university = req.body.education[i].university
+        eduObj.startDate = new Date(reqObj.education[i].startDate)
+        eduObj.endDate = new Date(reqObj.education[i].endDate)
+        eduObj.areaOfStudy = reqObj.education[i].areaOfStudy
+        eduObj.university = reqObj.education[i].university
         educationObj.push(eduObj)
     }
 
     const candidate = {
-        userName: req.body.userName,
-        fullName: req.body.fullName,
-        currentCTC: req.body.currentCTC,
-        expectedCTC: req.body.expectedCTC,
-        noticePeriod: req.body.noticePeriod,
-        skills: req.body.skills,
-        yearsOfExperience: req.body.yearsOfExperience,
+        userName: reqObj.userName,
+        fullName: reqObj.fullName,
+        currentCTC: reqObj.currentCTC,
+        expectedCTC: reqObj.expectedCTC,
+        noticePeriod: reqObj.noticePeriod,
+        skills: reqObj.skills,
+        yearsOfExperience: reqObj.yearsOfExperience,
         workExperience: workExperienceObj,
-        profileRating: req.body.profileRating,
-        bio: req.body.bio,
+        profileRating: reqObj.profileRating,
+        bio: reqObj.bio,
         education: educationObj,
-        // achievements: req.body.achievements,
-        languages: req.body.languages,
-        otherProfiles: req.body.otherProfiles
+        // achievements: reqObj.achievements,
+        languages: reqObj.languages,
+        otherProfiles: reqObj.otherProfiles
     }
 
     return candidate
@@ -65,8 +67,8 @@ router.get('/:userName', async (req,res) => {
     }
 })
 
-router.post('/', async (req,res) => {
-    const candidateObj = getCandidateObj(req)
+router.post('/', candidateValidationRules(), validate, async (req,res) => {
+    const candidateObj = getCandidateObj(req.body)
     const candidate = new Candidate(candidateObj)
     try {
         const savedCandidate = await candidate.save()
@@ -77,10 +79,21 @@ router.post('/', async (req,res) => {
     
 })
 
-router.put('/:userName', async (req,res) => {
-    const candidateObj = getCandidateObj(req)
+router.put('/:userName', candidateValidationRules(), validate, async (req,res) => {
+    const candidateObj = getCandidateObj(req.body)
     try {
         const savedCandidate = await Candidate.replaceOne({userName: req.params.userName}, candidateObj)
+        res.json(savedCandidate)
+    } catch(err) {
+        res.json({message: err})
+    }
+    
+})
+
+// Patch request for updating rating
+router.patch('/:userName', candidateRatingRule(), validate, async (req,res) => {
+    try {
+        const savedCandidate = await Candidate.updateOne({userName: req.params.userName}, {profileRating: req.body.profileRating})
         res.json(savedCandidate)
     } catch(err) {
         res.json({message: err})
