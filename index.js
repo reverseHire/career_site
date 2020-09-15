@@ -11,9 +11,12 @@ const candidate = require('./routes/candidates')
 app.use(express.json())
 app.use('/user', user)
 app.use('/candidate', candidate)
+app.use(express.static(__dirname + '/public'));
+
 
 app.get('/', (req, res) => {
-    res.send("Hello World")
+    console.log('/index.html')
+    res.sendFile('/index.html')
 })
 
 mongoose.connect(process.env.DB_CONNECTION, {
@@ -21,6 +24,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true
-}, ()=> console.log("Connected to DB"));
+}, () => console.log("Connected to DB"));
 
 app.listen(3000, () => console.log("Listening on port 3000"))
