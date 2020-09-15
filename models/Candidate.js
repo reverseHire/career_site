@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CandidateSchema = mongoose.Schema({
-    userName: {type: String, required: true},
+    email: {type: String, required: true},
     fullName: {type: String, required: true},
     currentCTC: {type: Number},
     expectedCTC: {type: Number},

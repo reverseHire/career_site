@@ -6,7 +6,7 @@ const User = require('../models/User')
 
 const userLoginRule = () => {
     return [
-        body('username').isString(),
+        body('email').isEmail(),
         body('password').isLength({ min: 8 }),
         body('userType').isIn(["C","R"])
     ]
@@ -14,7 +14,7 @@ const userLoginRule = () => {
 
 const userUpdatePasswordRule = () => {
     return [
-        body('username').isString(),
+        body('email').isEmail(),
         body('password').isLength({ min: 8 }),
         body('oldPassword').isLength({ min: 8 }),
         body('userType').isIn(["C","R"])
@@ -36,9 +36,16 @@ const validate = (req, res, next) => {
 
 router.post("/register", userLoginRule(), validate, async (req, res) => {
     try {
-        var user = new User(req.body);
-        var result = await user.save();
-        res.json(result);
+        var user = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
+        if(user) {
+            return res.status(400).json({ message: `The user ${req.body.email} already exists` });
+        }
+
+        console.log("User does not exist")
+        
+        var userNew = new User(req.body);
+        var result = await userNew.save();
+        res.json({ message: `User ${req.body.email} registered` });
     } catch (err) {
         res.status(500).json({message: err});
     }
@@ -47,23 +54,21 @@ router.post("/register", userLoginRule(), validate, async (req, res) => {
 // Ask for old password and then update new password
 router.put("/updatePassword", userUpdatePasswordRule(), validate, async (req, res) => {
     try {
-        var user = await User.findOne({ username: req.body.username, userType: req.body.userType }).exec();
+        var user = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
         if(!user) {
-            return res.status(400).json({ message: "The username does not exist" });
+            return res.status(400).json({ message: `The user ${req.body.email} does not exist` });
         }
         if(!user.comparePassword(req.body.oldPassword)) {
             return res.status(400).json({ message: "The password is incorrect" });
         }
-        console.log("Password matched")
-        // Old password is correct, update the password now
-        // var user1 = new User(req.body);
-        // console.log(user)
-        user.updatePassword()
-        // user.password = req.body.password
-        // console.log(user)
+
+        // Old password is correct, delete the record and create a new one
+        var result = await User.deleteOne({ email: req.body.email, userType: req.body.userType });
+
+        var userNew = new User(req.body);
+        var result = await userNew.save();
         
-        var result = await User.updateOne({ username: req.body.username, userType: req.body.userType }, {password: user.password});
-        res.json(result);
+        res.json({ message: `Password of User ${req.body.email} changed successfully` });
 
     } catch (err) {
         res.status(500).json({message: err});
@@ -72,15 +77,15 @@ router.put("/updatePassword", userUpdatePasswordRule(), validate, async (req, re
 
 router.post("/login", userLoginRule(), validate ,async (req, res) => {
     try {
-        var user = await User.findOne({ username: req.body.username, userType: req.body.userType }).exec();
+        var user = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
         if(!user) {
-            return res.status(400).json({ message: "The username does not exist" });
+            return res.status(400).json({ message: `The user ${req.body.email} does not exist` });
         }
         // user.comparePassword(req.body.password, (err, match) => {
         if(!user.comparePassword(req.body.password)) {
             return res.status(400).json({ message: "The password is incorrect" });
         }
-        res.json({ message: "The username and password combination is correct!" });
+        res.json({ message: "Login Succeeded!" });
     } catch (err) {
         res.status(500).json({message: err});
     }

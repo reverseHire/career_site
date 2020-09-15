@@ -29,7 +29,7 @@ function getCandidateObj(reqObj) {
     }
 
     const candidate = {
-        userName: reqObj.userName,
+        email: reqObj.email,
         fullName: reqObj.fullName,
         currentCTC: reqObj.currentCTC,
         expectedCTC: reqObj.expectedCTC,
@@ -57,10 +57,9 @@ router.get('/', async (req,res) => {
     }
 })
 
-router.get('/:userName', async (req,res) => {
-    const candidateUserName = req.params.userName
+router.get('/:email', async (req,res) => {
     try {
-        const candidate = await Candidate.find({userName: candidateUserName})
+        const candidate = await Candidate.findOne({email: req.params.email})
         res.json(candidate)
     } catch(err) {
         res.json({message: err})
@@ -79,10 +78,10 @@ router.post('/', candidateValidationRules(), validate, async (req,res) => {
     
 })
 
-router.put('/:userName', candidateValidationRules(), validate, async (req,res) => {
+router.put('/:email', candidateValidationRules(), validate, async (req,res) => {
     const candidateObj = getCandidateObj(req.body)
     try {
-        const savedCandidate = await Candidate.replaceOne({userName: req.params.userName}, candidateObj)
+        const savedCandidate = await Candidate.replaceOne({email: req.params.email}, candidateObj)
         res.json(savedCandidate)
     } catch(err) {
         res.json({message: err})
@@ -91,9 +90,9 @@ router.put('/:userName', candidateValidationRules(), validate, async (req,res) =
 })
 
 // Patch request for updating rating
-router.patch('/:userName', candidateRatingRule(), validate, async (req,res) => {
+router.patch('/:email', candidateRatingRule(), validate, async (req,res) => {
     try {
-        const savedCandidate = await Candidate.updateOne({userName: req.params.userName}, {profileRating: req.body.profileRating})
+        const savedCandidate = await Candidate.updateOne({email: req.params.email}, {profileRating: req.body.profileRating})
         res.json(savedCandidate)
     } catch(err) {
         res.json({message: err})

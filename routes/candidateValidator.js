@@ -2,7 +2,7 @@ const { body, validationResult } = require('express-validator')
 
 const candidateValidationRules = () => {
     return [
-        body('userName').notEmpty().isString(),
+        body('email').notEmpty().isEmail(),
         body('fullName').notEmpty().isString(),
         body('currentCTC').optional().isFloat(),
         body('expectedCTC').optional().isFloat(),

@@ -2,10 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const bcrypt = require('bcrypt')
-const SALT_WORK_FACTOR = 8;
+const SALT_WORK_FACTOR = 10;
 
 var UserSchema = new Schema({
-    username: { type: String, required: true, index: { unique: true } },
+    email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     userType: { type: String, required: true }
 });
@@ -17,14 +17,6 @@ UserSchema.pre('save', function(next) {
     this.password = bcrypt.hashSync(this.password, SALT_WORK_FACTOR);
     next();
 });
-
-UserSchema.methods.updatePassword = function() {
-    // if(!this.isModified("password")) {
-    //     return next();
-    // }
-    this.password = bcrypt.hashSync(this.password, SALT_WORK_FACTOR);
-    // next();
-};
 
 UserSchema.methods.comparePassword = function(plaintext) {
     return bcrypt.compareSync(plaintext, this.password);
