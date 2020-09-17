@@ -6,11 +6,19 @@ require('dotenv').config();
 
 const user = require('./routes/userLogin')
 const candidate = require('./routes/candidates')
+const hackerrank = require('./routes/hackerrank')
+const github = require('./routes/github')
+const stackoverflow = require('./routes/stackoverflow')
 
 // Middleware
 app.use(express.json())
+
+app.use('/hackerrank', hackerrank)
+app.use('/github', github)
+app.use('/stackoverflow', stackoverflow)
 app.use('/user', user)
 app.use('/candidate', candidate)
+
 app.use(express.static(__dirname + '/public'));
 
 

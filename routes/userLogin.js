@@ -1,38 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-const { body, validationResult } = require('express-validator')
-const User = require('../models/User')
-
-const userLoginRule = () => {
-    return [
-        body('email').isEmail(),
-        body('password').isLength({ min: 8 }),
-        body('userType').isIn(["C","R"])
-    ]
-}
-
-const userUpdatePasswordRule = () => {
-    return [
-        body('email').isEmail(),
-        body('password').isLength({ min: 8 }),
-        body('oldPassword').isLength({ min: 8 }),
-        body('userType').isIn(["C","R"])
-    ]
-}
-
-const validate = (req, res, next) => {
-    const errors = validationResult(req)
-    if (errors.isEmpty()) {
-        return next()
-    }
-    const extractedErrors = []
-    errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-
-    return res.status(422).json({
-        errors: extractedErrors,
-    })
-}
+const User = require('../models/User');
+const { userLoginRule, userUpdatePasswordRule, validate } = require('./inputValidator');
 
 router.post("/register", userLoginRule(), validate, async (req, res) => {
     try {
@@ -40,8 +10,6 @@ router.post("/register", userLoginRule(), validate, async (req, res) => {
         if(user) {
             return res.status(400).json({ message: `The user ${req.body.email} already exists` });
         }
-
-        console.log("User does not exist")
         
         var userNew = new User(req.body);
         var result = await userNew.save();

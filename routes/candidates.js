@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Candidate = require('../models/Candidate')
-const { candidateValidationRules, candidateRatingRule, validate } = require('./candidateValidator.js')
+const { candidateValidationRules, candidateRatingRule, validate } = require('./inputValidator.js')
 
 
 function getCandidateObj(reqObj) {
@@ -53,7 +53,7 @@ router.get('/', async (req,res) => {
         const candidate = await Candidate.find()
         res.json(candidate)
     } catch(err) {
-        res.json({message: err})
+        res.status(500).json({message: err})
     }
 })
 
@@ -62,29 +62,31 @@ router.get('/:email', async (req,res) => {
         const candidate = await Candidate.findOne({email: req.params.email})
         res.json(candidate)
     } catch(err) {
-        res.json({message: err})
+        res.status(500).json({message: err})
     }
 })
 
 router.post('/', candidateValidationRules(), validate, async (req,res) => {
-    const candidateObj = getCandidateObj(req.body)
-    const candidate = new Candidate(candidateObj)
     try {
+        const candidateObj = getCandidateObj(req.body)
+        const candidate = new Candidate(candidateObj)
+
         const savedCandidate = await candidate.save()
-        res.json(savedCandidate)
+        res.json({ message: "Canidate profile created successfully!" })
     } catch(err) {
-        res.json({message: err})
+        res.status(500).json({message: err})
     }
     
 })
 
 router.put('/:email', candidateValidationRules(), validate, async (req,res) => {
-    const candidateObj = getCandidateObj(req.body)
     try {
+        const candidateObj = getCandidateObj(req.body)
+        
         const savedCandidate = await Candidate.replaceOne({email: req.params.email}, candidateObj)
-        res.json(savedCandidate)
+        res.json({ message: "Canidate profile updated successfully!" })
     } catch(err) {
-        res.json({message: err})
+        res.status(500).json({message: err})
     }
     
 })
@@ -93,9 +95,9 @@ router.put('/:email', candidateValidationRules(), validate, async (req,res) => {
 router.patch('/:email', candidateRatingRule(), validate, async (req,res) => {
     try {
         const savedCandidate = await Candidate.updateOne({email: req.params.email}, {profileRating: req.body.profileRating})
-        res.json(savedCandidate)
+        res.json({ message: "Canidate profile updated successfully!" })
     } catch(err) {
-        res.json({message: err})
+        res.status(500).json({message: err})
     }
     
 })
