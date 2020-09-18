@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('#candidate-login-btn').on('click', function (e) {
+    $('#candidate-sign-up-btn').on('click', function (e) {
         e.preventDefault()
         var email = $('#candidate-email').val()
         var password = $('#candidate-password').val()
@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/login',
+            url: '/user/register',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -28,7 +28,7 @@ $(document).ready(function () {
 
     })
 
-    $('#recruiter-login-btn').on('click', function (e) {
+    $('#recruiter-sign-up-btn').on('click', function (e) {
         e.preventDefault()
         var email = $('#recruiter-email').val()
         var password = $('#recruiter-password').val()
@@ -40,7 +40,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/login',
+            url: '/user/register',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
