@@ -19,6 +19,7 @@ $(document).ready(function () {
             success: function (response) {
                 $.sessionStorage.set("email", email)
                 $.sessionStorage.set("userType", "C")
+                $.sessionStorage.set("usersession", response.sessionKey)
                 var url = "candidate-home.html";
                 $(location).attr('href', url);
             },
@@ -49,6 +50,7 @@ $(document).ready(function () {
             success: function (response) {
                 $.sessionStorage.set("email", email)
                 $.sessionStorage.set("userType", "R")
+                $.sessionStorage.set("usersession", response.sessionKey)
                 var url = "recruiter-home.html";
                 $(location).attr('href', url);
             },

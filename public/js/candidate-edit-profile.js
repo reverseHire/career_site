@@ -154,6 +154,104 @@ $(document).ready(function () {
 
     }
 
+    function getName() {
+        return $("#full-name").val()
+    }
+
+    function getBio() {
+        return $("#bio").html()
+    }
+
+    function getCurrentCTC() {
+        return $("#current-ctc").val()
+    }
+
+    function getExpectedCTC() {
+        return $("#expected-ctc").val()
+    }
+
+    function getNoticePeriod() {
+        return $("#notice-period").val()
+    }
+
+    function getYearsOfExperience() {
+        return $("#exp-years").val()
+    }
+
+    function getSkills() {
+        return $("#skills").val()
+    }
+
+    function getLanguages() {
+        return $("#languages").val()
+    }
+
+    function getWorkExpObjectFromForm(workExpFormObj, workExp) {
+        workExp = {}
+        var id = $(workExpFormObj).attr('id')
+        workExp.company = $('#' + id).find('.company').val()
+        workExp.jobTitle = $('#' + id).find('.job-title').val()
+        workExp.description = $('#' + id).find('.description').html()
+        workExp.startDate = $('#' + id).find('.start-date').val()
+        workExp.endDate = $('#' + id).find('.end-date').val()
+
+        return workExp
+    }
+
+    function getWorkExp() {
+        var workExps = []
+        var i = 0
+        var workExpFormObj = $('.work-exp-container').find('.work-exp')
+        for (i; i < workExpFormObj.length; i++) {
+            workExps[i] = getWorkExpObjectFromForm(workExpFormObj[i], workExps[i])
+        }
+        return workExps
+    }
+
+    function getEducationObjectFromForm(educationFormObj, education) {
+        education = {}
+        var id = $(educationFormObj).attr('id')
+        education.areaOfStudy = $('#' + id).find('.study').val()
+        education.university = $('#' + id).find('.university').val()
+        education.startDate = $('#' + id).find('.edu-start-date').val()
+        education.endDate = $('#' + id).find('.edu-end-date').val()
+
+        return education
+    }
+
+    function getEducation() {
+        var educations = []
+        var i = 0
+        var educationFormObj = $('.education-container').find('.education')
+        for (i; i < educationFormObj.length; i++) {
+            educations[i] = getEducationObjectFromForm(educationFormObj[i], educations[i])
+        }
+        return educations
+    }
+
+    function getOtherProfiles() {
+        var otherProfiles = {}
+        otherProfiles.hackerrank = $('#hackerrank').val()
+        otherProfiles.github = $('#github').val()
+        otherProfiles.stackOverflow = $('#stackoverflow').val()
+        return otherProfiles
+    }
+
+    function getDataFromForm(data) {
+        data.fullName = getName()
+        data.bio = getBio()
+        data.currentCTC = getCurrentCTC()
+        data.expectedCTC = getExpectedCTC()
+        data.noticePeriod = getNoticePeriod()
+        data.yearsOfExperience = getYearsOfExperience()
+        data.skills = getSkills()
+        data.languages = getLanguages()
+        data.workExperience = getWorkExp()
+        data.education = getEducation()
+        data.otherProfiles = getOtherProfiles()
+        return data
+    }
+
     function initCandidateEditProfile() {
         var email = $.sessionStorage.get("email")
         jQuery.ajax({
@@ -174,20 +272,22 @@ $(document).ready(function () {
         })
     }
 
-    $(document).on('click', '#save-details', function () {
+    $(document).on('click', '#save-details', function (e) {
+        e.preventDefault()
+        var sessionKey = $.sessionStorage.get('usersession')
+        var email = $.sessionStorage.get('email')
+        var data = { "sessionKey": sessionKey, "email": email }
+        getDataFromForm(data)
         jQuery.ajax({
-            url: '/candidate/' + email,
+            url: '/candidate/',
             method: 'PUT',
             contentType: 'application/json',
+            data: JSON.stringify(data),
             success: function (response) {
-                setEmail(email)
-                if (response != null) {
-                    setFormValues(response)
-                }
-
+                $('#alert-placeholder').html("Your changes have been saved!")
             },
             error: function (response) {
-                alert(response)
+                $('#alert-placeholder').html(response.message)
             }
 
         })
