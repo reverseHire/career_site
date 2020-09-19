@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
+const axios = require('axios')
+
 const Candidate = require('../models/Candidate')
-const { candidateValidationRules, candidateRatingRule, validate } = require('./inputValidator.js')
+const { candidateDataRule, candidateRatingRule, validate } = require('./inputValidator.js')
+const { use } = require('./userLogin')
 
 
 function getCandidateObj(reqObj) {
@@ -31,6 +34,7 @@ function getCandidateObj(reqObj) {
     const candidate = {
         email: reqObj.email,
         fullName: reqObj.fullName,
+        sessionKey: reqObj.sessionKey,
         currentCTC: reqObj.currentCTC,
         expectedCTC: reqObj.expectedCTC,
         noticePeriod: reqObj.noticePeriod,
@@ -66,25 +70,34 @@ router.get('/:email', async (req,res) => {
     }
 })
 
-router.post('/', candidateValidationRules(), validate, async (req,res) => {
+router.post('/', candidateDataRule(), validate, async (req,res) => {
     try {
+        if (req.query.admin !== "adminPass") {
+            return res.status(401).json({ message: "Not authorized" })
+        }
+
         const candidateObj = getCandidateObj(req.body)
         const candidate = new Candidate(candidateObj)
 
-        const savedCandidate = await candidate.save()
-        res.json({ message: "Canidate profile created successfully!" })
+        await candidate.save()
+        res.json({ message: "Candidate profile created successfully!" })
     } catch(err) {
         res.status(500).json({message: err})
     }
     
 })
 
-router.put('/:email', candidateValidationRules(), validate, async (req,res) => {
+router.put('/', candidateDataRule(), validate, async (req,res) => {
     try {
         const candidateObj = getCandidateObj(req.body)
-        
-        const savedCandidate = await Candidate.replaceOne({email: req.params.email}, candidateObj)
-        res.json({ message: "Canidate profile updated successfully!" })
+        const candidate = await Candidate.findOne({email: candidateObj.email})
+
+        if (candidate.sessionKey !== candidateObj.sessionKey) {
+            return res.status(401).json({message: "Not authorized! Log in and try again"})
+        }
+
+        await Candidate.replaceOne({email: candidateObj.email}, candidateObj)
+        res.json({ message: "Candidate profile updated successfully!" })
     } catch(err) {
         res.status(500).json({message: err})
     }
@@ -92,10 +105,54 @@ router.put('/:email', candidateValidationRules(), validate, async (req,res) => {
 })
 
 // Patch request for updating rating
-router.patch('/:email', candidateRatingRule(), validate, async (req,res) => {
+router.patch('/updateRating/:email', candidateRatingRule(), validate, async (req,res) => {
     try {
+        if (req.body.admin !== "adminPass") {
+            return res.status(401).json({ message: "Not authorized" })
+        }
+
         const savedCandidate = await Candidate.updateOne({email: req.params.email}, {profileRating: req.body.profileRating})
-        res.json({ message: "Canidate profile updated successfully!" })
+        res.json({ message: "Candidate profile updated successfully!" })
+    } catch(err) {
+        res.status(500).json({message: err})
+    }
+    
+})
+
+router.patch('/updateSessionKey', async (req,res) => {
+    try {
+        if (req.query.admin !== "adminPass") {
+            return res.status(401).json({ message: "Not authorized" })
+        }
+        const result = await Candidate.updateOne({email: req.body.email}, {sessionKey: req.body.sessionKey})
+        res.json({ message: "Session Key updated successfully!" })
+    } catch(err) {
+        res.status(500).json({message: err})
+    }
+    
+})
+
+// Do not use. Work in progress
+router.patch('/generateRating', candidateDataRule(), validate, async (req,res) => {
+    try {
+        const candidateObjProfile = getCandidateObj(req.body).otherProfiles
+        console.log(candidateObjProfile)
+        let rating = 0
+
+        if (candidateObjProfile.hackerrank !== undefined) {
+            const hackerrankProfile = await axios.get('/hackerrank/' + candidateObjProfile.hackerrank, {proxy: {port:3000} } );
+            console.log(hackerrankProfile);
+        }
+        if (candidateObjProfile.github !== undefined) {
+            const githubProfile = await axios.get('/github/' + candidateObjProfile.github, {proxy: {port:3000} });
+            console.log(githubProfile);
+        }
+        if (candidateObjProfile.stackoverflow !== undefined) {
+            const stackoverflowProfile = await axios.get('/stackoverflow/' + candidateObjProfile.stackoverflow, {proxy: {port:3000} });
+            console.log(stackoverflowProfile);
+        }
+
+        res.json({ message: "Candidate rating generated successfully!" , profileRating: rating})
     } catch(err) {
         res.status(500).json({message: err})
     }

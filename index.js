@@ -5,10 +5,11 @@ const mongoose = require('mongoose')
 require('dotenv').config();
 
 const user = require('./routes/userLogin')
-const candidate = require('./routes/candidates')
 const hackerrank = require('./routes/hackerrank')
 const github = require('./routes/github')
 const stackoverflow = require('./routes/stackoverflow')
+const candidate = require('./routes/candidates')
+const recruiter = require('./routes/recruiter')
 
 // Middleware
 app.use(express.json())
@@ -16,8 +17,9 @@ app.use(express.json())
 app.use('/hackerrank', hackerrank)
 app.use('/github', github)
 app.use('/stackoverflow', stackoverflow)
-app.use('/user', user)
 app.use('/candidate', candidate)
+app.use('/recruiter', recruiter)
+app.use('/user', user)
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free'));
@@ -35,4 +37,5 @@ mongoose.connect(process.env.DB_CONNECTION, {
     useCreateIndex: true
 }, () => console.log("Connected to DB"));
 
-app.listen(3000, () => console.log("Listening on port 3000"))
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log(`Server running on port ${port}`))

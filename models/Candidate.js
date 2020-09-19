@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const CandidateSchema = mongoose.Schema({
     email: {type: String, required: true},
     fullName: {type: String, required: true},
+    sessionKey: {type: String, required: true},
     currentCTC: {type: Number},
     expectedCTC: {type: Number},
-    noticePeriod: {type: Number, required: true},
-    skills: [{type: String, required: true}],
-    yearsOfExperience: {type: Number, required: true},
+    noticePeriod: {type: Number},
+    skills: [{type: String}],
+    yearsOfExperience: {type: Number},
     workExperience: [{
         startDate: {type: Date},
         endDate: {type: Date},
@@ -23,7 +24,7 @@ const CandidateSchema = mongoose.Schema({
         areaOfStudy: {type: String},
         university: {type: String}
     }],
-    // achievements: {},
+    // otherProjects: [{}],
     languages: [{type: String}],
     otherProfiles: {
         hackerrank: {type: String},
