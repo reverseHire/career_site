@@ -74,3 +74,12 @@ html {
 .color-red {
   color: #d50000;
 }
+
+.unique-color-dark {
+  background-color: #0062cc;
+  color: #ffffff;
+}
+
+.hr-light {
+  background-color: #ffffff;
+}

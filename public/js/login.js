@@ -17,6 +17,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function (response) {
+                $.sessionStorage.set("email", email)
+                $.sessionStorage.set("userType", "C")
                 var url = "candidate-home.html";
                 $(location).attr('href', url);
             },
@@ -45,6 +47,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function (response) {
+                $.sessionStorage.set("email", email)
+                $.sessionStorage.set("userType", "R")
                 var url = "recruiter-home.html";
                 $(location).attr('href', url);
             },
