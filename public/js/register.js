@@ -4,8 +4,10 @@ $(document).ready(function () {
         e.preventDefault()
         var email = $('#candidate-email').val()
         var password = $('#candidate-password').val()
+        var fullName = $('#candidate-name').val()
 
         var data = {
+            'fullName': fullName,
             'email': email,
             'password': password,
             'userType': 'C'
@@ -35,8 +37,10 @@ $(document).ready(function () {
         e.preventDefault()
         var email = $('#recruiter-email').val()
         var password = $('#recruiter-password').val()
+        var fullName = $('#recruiter-name').val()
 
         var data = {
+            'fullName': fullName,
             'email': email,
             'password': password,
             'userType': 'R'

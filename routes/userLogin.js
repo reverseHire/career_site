@@ -12,10 +12,10 @@ const createSessionKey = require('./sessions');
 router.post("/register", userLoginRule(), validate, async (req, res) => {
     try {
         let checkUser = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
-        if(checkUser) {
+        if (checkUser) {
             return res.status(400).json({ message: `The user ${req.body.email} already exists` });
         }
-        
+
         let user = new User(req.body);
         await user.save();
 
@@ -28,23 +28,23 @@ router.post("/register", userLoginRule(), validate, async (req, res) => {
 
         if (user.userType === "C") {
             try {
-                await axios.post('/candidate?admin=adminPass' , userObj, {proxy: {port:3000}} );
+                await axios.post('/candidate?admin=adminPass', userObj, { proxy: { port: 3000 } });
             } catch (error) {
-                return res.status(500).json({message: error})
+                return res.status(500).json({ message: error })
             }
         }
         else if (user.userType === "R") {
             try {
-                await axios.post('/recruiter?admin=adminPass' , userObj, {proxy: {port:3000}} );
+                await axios.post('/recruiter?admin=adminPass', userObj, { proxy: { port: 3000 } });
             } catch (error) {
-                return res.status(500).json({message: error})
+                return res.status(500).json({ message: error })
             }
         }
 
-        res.json({ message: `User ${req.body.email} registered` , sessionKey: sessionKey });
+        res.json({ message: `User ${req.body.email} registered`, sessionKey: sessionKey });
 
     } catch (err) {
-        res.status(500).json({message: err});
+        res.status(500).json({ message: err });
     }
 });
 
@@ -52,10 +52,10 @@ router.post("/register", userLoginRule(), validate, async (req, res) => {
 router.put("/updatePassword", userUpdatePasswordRule(), validate, async (req, res) => {
     try {
         let user = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
-        if(!user) {
+        if (!user) {
             return res.status(400).json({ message: `The user ${req.body.email} does not exist` });
         }
-        if(!user.comparePassword(req.body.oldPassword)) {
+        if (!user.comparePassword(req.body.oldPassword)) {
             return res.status(400).json({ message: "The password is incorrect" });
         }
 
@@ -64,22 +64,22 @@ router.put("/updatePassword", userUpdatePasswordRule(), validate, async (req, re
 
         let userNew = new User(req.body);
         await userNew.save();
-        
+
         res.json({ message: `Password of User ${req.body.email} changed successfully` });
 
     } catch (err) {
-        res.status(500).json({message: err});
+        res.status(500).json({ message: err });
     }
 });
 
-router.post("/login", userLoginRule(), validate ,async (req, res) => {
+router.post("/login", userLoginRule(), validate, async (req, res) => {
     try {
         let user = await User.findOne({ email: req.body.email, userType: req.body.userType }).exec();
-        if(!user) {
+        if (!user) {
             return res.status(400).json({ message: `The user ${req.body.email} does not exist` });
         }
         // user.comparePassword(req.body.password, (err, match) => {
-        if(!user.comparePassword(req.body.password)) {
+        if (!user.comparePassword(req.body.password)) {
             return res.status(400).json({ message: "The password is incorrect" });
         }
 
@@ -91,22 +91,22 @@ router.post("/login", userLoginRule(), validate ,async (req, res) => {
 
         if (user.userType === "C") {
             try {
-                await axios.patch('/candidate/updateSessionKey?admin=adminPass' , userObj, {proxy: {port:3000}} );
+                await axios.patch('/candidate/updateSessionKey?admin=adminPass', userObj, { proxy: { port: 3000 } });
             } catch (error) {
-                return res.status(500).json({message: error})
+                return res.status(500).json({ message: error })
             }
         }
-        else if (useruserType === "R") {
+        else if (user.userType === "R") {
             try {
-                await axios.patch('/recruiter/updateSessionKey?admin=adminPass' , userObj, {proxy: {port:3000}} );
+                await axios.patch('/recruiter/updateSessionKey?admin=adminPass', userObj, { proxy: { port: 3000 } });
             } catch (error) {
-                return res.status(500).json({message: error})
+                return res.status(500).json({ message: error })
             }
         }
 
         res.json({ message: "Login Succeeded!", sessionKey: sessionKey });
     } catch (err) {
-        res.status(500).json({message: err});
+        res.status(500).json({ message: err });
     }
 });
 

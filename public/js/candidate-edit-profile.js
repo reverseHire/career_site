@@ -129,12 +129,14 @@ $(document).ready(function () {
     }
 
     function setProfileRating(profileRating) {
-        if (profileRating === undefined || profileRating === null || profileRating.length === 0) {
-            $('#rating-placeholder').html("Your profile rating will be available soon!")
-            $('#rating-placeholder').addClass('alert-warning')
+        if (profileRating === undefined || profileRating === null || profileRating.length === 0 || profileRating === 0.0) {
+            $('#rating-message').text("Your profile rating will be available soon!")
+            $('#rating-placeholder').addClass('badge-warning')
+            $('#rating').attr('value', '0.0')
         } else {
-            $('#rating-placeholder').html("Profile rating = " + profileRating)
-            $('#rating-placeholder').addClass('alert-success')
+            $('#rating-message').text("Profile rating = " + profileRating)
+            $('#rating-placeholder').addClass('badge-success')
+            $('#rating').attr('value', profileRating)
         }
     }
 
@@ -151,7 +153,6 @@ $(document).ready(function () {
         setEducation(response.education)
         setOtherProfiles(response.otherProfiles)
         setProfileRating(response.profileRating)
-
     }
 
     function getName() {
@@ -159,7 +160,7 @@ $(document).ready(function () {
     }
 
     function getBio() {
-        return $("#bio").html()
+        return $("#bio").val()
     }
 
     function getCurrentCTC() {
@@ -186,14 +187,23 @@ $(document).ready(function () {
         return $("#languages").val()
     }
 
+    function setDateFormat(date) {
+        var d = new Date(date.split("/").reverse().join("-"))
+        var dd = ("0" + (d.getDate())).slice(-2)
+        var mm = ("0" + (d.getMonth() + 1)).slice(-2)
+        var yy = d.getFullYear()
+
+        return yy + "-" + mm + "-" + dd
+    }
+
     function getWorkExpObjectFromForm(workExpFormObj, workExp) {
         workExp = {}
         var id = $(workExpFormObj).attr('id')
         workExp.company = $('#' + id).find('.company').val()
         workExp.jobTitle = $('#' + id).find('.job-title').val()
-        workExp.description = $('#' + id).find('.description').html()
-        workExp.startDate = $('#' + id).find('.start-date').val()
-        workExp.endDate = $('#' + id).find('.end-date').val()
+        workExp.description = $('#' + id).find('.description').val()
+        workExp.startDate = setDateFormat($('#' + id).find('.start-date').val())
+        workExp.endDate = setDateFormat($('#' + id).find('.end-date').val())
 
         return workExp
     }
@@ -213,8 +223,8 @@ $(document).ready(function () {
         var id = $(educationFormObj).attr('id')
         education.areaOfStudy = $('#' + id).find('.study').val()
         education.university = $('#' + id).find('.university').val()
-        education.startDate = $('#' + id).find('.edu-start-date').val()
-        education.endDate = $('#' + id).find('.edu-end-date').val()
+        education.startDate = setDateFormat($('#' + id).find('.edu-start-date').val())
+        education.endDate = setDateFormat($('#' + id).find('.edu-end-date').val())
 
         return education
     }
@@ -237,6 +247,10 @@ $(document).ready(function () {
         return otherProfiles
     }
 
+    function getProfileRating() {
+        return ($('#rating').val() === undefined || $('#rating').val().length === 0) ? 0.0 : $('#rating').val()
+    }
+
     function getDataFromForm(data) {
         data.fullName = getName()
         data.bio = getBio()
@@ -249,6 +263,7 @@ $(document).ready(function () {
         data.workExperience = getWorkExp()
         data.education = getEducation()
         data.otherProfiles = getOtherProfiles()
+        data.profileRating = getProfileRating()
         return data
     }
 
@@ -266,7 +281,9 @@ $(document).ready(function () {
 
             },
             error: function (response) {
-                alert(response)
+                $('#details-alert-container').html(response.message)
+                $('#details-alert-container').removeClass()
+                $('#details-alert-container').addClass('alert alert-danger')
             }
 
         })
@@ -283,11 +300,18 @@ $(document).ready(function () {
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
+            dataType: 'json',
             success: function (response) {
-                $('#alert-placeholder').html("Your changes have been saved!")
+                $('#details-alert-container').html("Your changes have been saved!")
+                $('#details-alert-container').removeClass()
+                $('#details-alert-container').addClass("alert alert-success")
+                initCandidateEditProfile()
             },
             error: function (response) {
-                $('#alert-placeholder').html(response.message)
+                $('#details-alert-container').html(response.message)
+                $('#details-alert-container').removeClass()
+                $('#details-alert-container').addClass("alert alert-danger")
+                initCandidateEditProfile()
             }
 
         })
@@ -307,6 +331,52 @@ $(document).ready(function () {
         var id = $(educations[educations.length - 1]).attr('id')
         var num = id.split('-')
         cloneEducation(Number(num[1]) + 1)
+    })
+
+    $(document).on('click', '#save-settings', function (e) {
+        e.preventDefault()
+        var fullName = $('#candidate-title').html()
+        var email = $.sessionStorage.get("email")
+        var userType = $.sessionStorage.get("userType")
+        var oldPassword = $('#current-pwd').val()
+        var newPassword = $('#new-pwd').val()
+        var confirmPassword = $('#confirm-new-pwd').val()
+
+        if (newPassword !== confirmPassword) {
+            $('#settings-alert-container').html("New Password and Confirm Password should be same.")
+            $('#settings-alert-container').removeClass()
+            $('#settings-alert-container').addClass('alert alert-danger')
+            return
+        }
+
+        var data = {
+            'fullName': fullName,
+            'email': email,
+            'oldPassword': oldPassword,
+            'password': newPassword,
+            'userType': userType
+        }
+        jQuery.ajax({
+            url: '/user/updatePassword',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (response) {
+                $('#settings-alert-container').html("Your changes have been saved!")
+                $('#settings-alert-container').removeClass()
+                $('#settings-alert-container').addClass('alert alert-success')
+                $('#current-pwd').attr('value', '')
+                $('#new-pwd').attr('value', '')
+                $('#confirm-new-pwd').attr('value', '')
+            },
+            error: function (response) {
+                $('#settings-alert-container').html(response.message)
+                $('#settings-alert-container').removeClass()
+                $('#settings-alert-container').addClass('alert alert-danger')
+            }
+
+        })
     })
 
     initCandidateEditProfile()
