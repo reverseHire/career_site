@@ -37,5 +37,7 @@ mongoose.connect(process.env.DB_CONNECTION, {
     useCreateIndex: true
 }, () => console.log("Connected to DB"));
 
-const port = process.env.PORT || 3000
-app.listen(port, () => console.log(`Server running on port ${port}`))
+// const port = process.env.PORT || 3000
+// app.listen(port, () => console.log(`Server running on port ${port}`))
+
+module.exports = app

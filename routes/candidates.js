@@ -1,12 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const axios = require('axios')
+// const axios = require('axios')
 
 const Candidate = require('../models/Candidate')
 const { candidateDataRule, candidateRatingRule, validate } = require('./inputValidator.js')
-const { use } = require('./userLogin')
-
 
 function getCandidateObj(reqObj) {
     const workExperienceObj = []
@@ -124,7 +122,7 @@ router.patch('/updateSessionKey', async (req, res) => {
         if (req.query.admin !== "adminPass") {
             return res.status(401).json({ message: "Not authorized" })
         }
-        const result = await Candidate.updateOne({ email: req.body.email }, { sessionKey: req.body.sessionKey })
+        await Candidate.updateOne({ email: req.body.email }, { sessionKey: req.body.sessionKey })
         res.json({ message: "Session Key updated successfully!" })
     } catch (err) {
         res.status(500).json({ message: err })
@@ -133,30 +131,30 @@ router.patch('/updateSessionKey', async (req, res) => {
 })
 
 // Do not use. Work in progress
-router.patch('/generateRating', candidateDataRule(), validate, async (req, res) => {
-    try {
-        const candidateObjProfile = getCandidateObj(req.body).otherProfiles
-        console.log(candidateObjProfile)
-        let rating = 0
+// router.patch('/generateRating', candidateDataRule(), validate, async (req, res) => {
+//     try {
+//         const candidateObjProfile = getCandidateObj(req.body).otherProfiles
+//         console.log(candidateObjProfile)
+//         let rating = 0
 
-        if (candidateObjProfile.hackerrank !== undefined) {
-            const hackerrankProfile = await axios.get('/hackerrank/' + candidateObjProfile.hackerrank, { proxy: { port: 3000 } });
-            console.log(hackerrankProfile);
-        }
-        if (candidateObjProfile.github !== undefined) {
-            const githubProfile = await axios.get('/github/' + candidateObjProfile.github, { proxy: { port: 3000 } });
-            console.log(githubProfile);
-        }
-        if (candidateObjProfile.stackoverflow !== undefined) {
-            const stackoverflowProfile = await axios.get('/stackoverflow/' + candidateObjProfile.stackoverflow, { proxy: { port: 3000 } });
-            console.log(stackoverflowProfile);
-        }
+//         if (candidateObjProfile.hackerrank !== undefined) {
+//             const hackerrankProfile = await axios.get('/hackerrank/' + candidateObjProfile.hackerrank);
+//             // console.log(hackerrankProfile);
+//         }
+//         if (candidateObjProfile.github !== undefined) {
+//             const githubProfile = await axios.get('/github/' + candidateObjProfile.github);
+//             // console.log(githubProfile);
+//         }
+//         if (candidateObjProfile.stackoverflow !== undefined) {
+//             const stackoverflowProfile = await axios.get('/stackoverflow/' + candidateObjProfile.stackoverflow);
+//             // console.log(stackoverflowProfile);
+//         }
 
-        res.json({ message: "Candidate rating generated successfully!", profileRating: rating })
-    } catch (err) {
-        res.status(500).json({ message: err })
-    }
+//         res.json({ message: "Candidate rating generated successfully!", profileRating: rating })
+//     } catch (err) {
+//         res.status(500).json({ message: err })
+//     }
 
-})
+// })
 
 module.exports = router

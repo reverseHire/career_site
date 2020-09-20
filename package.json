@@ -4,15 +4,23 @@
   "description": "Career portal project",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "devstart": "nodemon index.js"
+    "start": "node local.js",
+    "local": "nodemon local.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reverseHire/career_site.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reverseHire/career_site/issues"
+  },
+  "homepage": "https://github.com/reverseHire/career_site",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "axios": "^0.20.0",
-    "bcrypt": "^5.0.0",
+    "aws-serverless-express": "^3.3.8",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
