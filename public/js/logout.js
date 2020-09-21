@@ -1,4 +1,4 @@
-window.prefix = '/dev'
+window.prefix = ''
 
 $(function () {
     $(document).on('click', '#logout-btn', function () {
