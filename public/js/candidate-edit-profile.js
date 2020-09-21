@@ -65,22 +65,38 @@ $(document).ready(function () {
         return d;
     }
 
+    function setCurrentJob(element, endDate) {
+        $(element).find('.current-job').prop('checked', true);
+        $(element).find('.end-date').attr('type', 'hidden');
+        $(element).find('.end-date').attr('value', endDate);
+        $(element).hide();
+    }
+
+    function setWExpEndDateonForm(workExp, i, endDate) {
+        var d = new Date();
+        if (new Date(workExp.endDate) > d) {
+            setCurrentJob($('#exp-' + i).find('.end-date-col'), endDate);
+        }
+    }
+
+
     function setWorkExpObjectToForm(i, workExp) {
         $('#exp-' + i).find('.company').attr('value', workExp.company)
         $('#exp-' + i).find('.job-title').attr('value', workExp.jobTitle)
         $('#exp-' + i).find('.description').html(workExp.description)
         $('#exp-' + i).find('.start-date').attr('value', getConvertedDate(workExp.startDate))
-        $('#exp-' + i).find('.end-date').attr('value', getConvertedDate(workExp.endDate))
+        var endDate = getConvertedDate(workExp.endDate)
+        setWExpEndDateonForm(workExp, i, endDate);
     }
 
     function cloneWorkExp(id) {
-        var workExpClone = $('.work-exp').clone()
+        var workExpClone = $('#work-exp-frame').clone()
         $(workExpClone).attr('id', 'exp-' + id)
         $(workExpClone).appendTo(".work-exp-container")
 
         //clear values for the newly cloned work exp
         setWorkExpObjectToForm(id, workExpBlank)
-
+        $(workExpClone).removeClass('d-none')
     }
 
     function setWorkExp(workExp) {
@@ -204,16 +220,19 @@ $(document).ready(function () {
         workExp.description = $('#' + id).find('.description').val()
         workExp.startDate = setDateFormat($('#' + id).find('.start-date').val())
         workExp.endDate = setDateFormat($('#' + id).find('.end-date').val())
-
         return workExp
     }
 
     function getWorkExp() {
         var workExps = []
-        var i = 0
+        var count = 0
         var workExpFormObj = $('.work-exp-container').find('.work-exp')
-        for (i; i < workExpFormObj.length; i++) {
-            workExps[i] = getWorkExpObjectFromForm(workExpFormObj[i], workExps[i])
+        for (var i = 0; i < workExpFormObj.length; i++) {
+            if ($(workExpFormObj[i]).attr('id') === 'work-exp-frame') {
+                continue
+            }
+            workExps[count] = getWorkExpObjectFromForm(workExpFormObj[i], workExps[i])
+            count++
         }
         return workExps
     }
@@ -331,6 +350,11 @@ $(document).ready(function () {
         var id = $(educations[educations.length - 1]).attr('id')
         var num = id.split('-')
         cloneEducation(Number(num[1]) + 1)
+    })
+
+    $(document).on('click', '.current-job', function () {
+        var dateRow = $(this).parent().parent()
+        setCurrentJob($(dateRow).find('.end-date-col'), '2999-12-31')
     })
 
     $(document).on('click', '#save-settings', function (e) {

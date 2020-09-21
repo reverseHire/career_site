@@ -3,8 +3,8 @@ $(document).ready(function () {
     function setName(element, fullName, email) {
         var nameEle = $(element).find('.search-result-item-heading > a')
         $(nameEle).html(fullName)
-        $(nameEle).attr('href', '/candidate-view-profile.html?email=' + email)
-        $(element).find('.learn-more').attr('href', '/candidate-view-profile.html?email=' + email)
+        $(nameEle).attr('href', window.prefix + '/candidate-view-profile.html?email=' + email)
+        $(element).find('.learn-more').attr('href', window.prefix + '/candidate-view-profile.html?email=' + email)
     }
 
     function setBio(element, bio) {
