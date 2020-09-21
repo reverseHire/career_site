@@ -270,7 +270,7 @@ $(document).ready(function () {
     function initCandidateEditProfile() {
         var email = $.sessionStorage.get("email")
         jQuery.ajax({
-            url: '/candidate/' + email,
+            url: window.prefix + '/candidate/' + email,
             method: 'GET',
             contentType: 'application/json',
             success: function (response) {
@@ -296,7 +296,7 @@ $(document).ready(function () {
         var data = { "sessionKey": sessionKey, "email": email }
         getDataFromForm(data)
         jQuery.ajax({
-            url: '/candidate/',
+            url: window.prefix + '/candidate/',
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -357,7 +357,7 @@ $(document).ready(function () {
             'userType': userType
         }
         jQuery.ajax({
-            url: '/user/updatePassword',
+            url: window.prefix + '/user/updatePassword',
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -382,50 +382,3 @@ $(document).ready(function () {
     initCandidateEditProfile()
 
 })
-
-
-/*{
-    "otherProfiles": {
-        "hackerrank": "https://hackerrank.com/saurav94",
-        "github": "https://github.com/saurav94",
-        "stackOverflow": "https://stackoverflow.com/saurav94"
-    },
-    "skills": [
-        "python",
-        "javascript",
-        "rest api",
-        "mongoDB"
-    ],
-    "languages": [
-        "English"
-    ],
-    "_id": "5f5e23d31b7f6f1ccf371875",
-    "email": "patel.saurav.b@gmail.com",
-    "fullName": "Saurav Patel",
-    "currentCTC": 11,
-    "expectedCTC": 18,
-    "noticePeriod": 2,
-    "yearsOfExperience": 4,
-    "workExperience": [
-        {
-            "_id": "5f5e23d31b7f6f1ccf371876",
-            "startDate": "2016-08-22T00:00:00.000Z",
-            "endDate": "2999-12-31T00:00:00.000Z",
-            "jobTitle": "Developer",
-            "description": "jo lead ne bola wo kiya",
-            "company": "SAP"
-        }
-    ],
-    "bio": "Mast aadmi",
-    "education": [
-        {
-            "_id": "5f5e23d31b7f6f1ccf371877",
-            "startDate": "2012-05-01T00:00:00.000Z",
-            "endDate": "2016-05-01T00:00:00.000Z",
-            "areaOfStudy": "yehi to galti kiya sabse bada",
-            "university": "Mumbai university"
-        }
-    ],
-    "__v": 0,
-    "profileRating": 7.8
-}*/

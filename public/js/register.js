@@ -14,7 +14,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/register',
+            url: window.prefix + '/user/register',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -47,7 +47,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/register',
+            url: window.prefix + '/user/register',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),

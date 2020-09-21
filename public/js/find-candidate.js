@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     function initCandidateSearch() {
         jQuery.ajax({
-            url: '/candidate',
+            url: window.prefix + '/candidate',
             method: 'GET',
             contentType: 'application/json',
             success: function (response) {

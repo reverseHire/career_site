@@ -160,7 +160,7 @@ $(document).ready(function () {
     function initCandidateViewProfile() {
         var email = $.urlParam("email")
         jQuery.ajax({
-            url: '/candidate/' + email,
+            url: window.prefix + '/candidate/' + email,
             method: 'GET',
             contentType: 'application/json',
             success: function (response) {

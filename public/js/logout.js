@@ -1,3 +1,5 @@
+window.prefix = '/dev'
+
 $(function () {
     $(document).on('click', '#logout-btn', function () {
         $.sessionStorage.removeAll()

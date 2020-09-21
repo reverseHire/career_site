@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/login',
+            url: window.prefix + '/user/login',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -43,7 +43,7 @@ $(document).ready(function () {
         }
 
         jQuery.ajax({
-            url: '/user/login',
+            url: window.prefix + '/user/login',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
