@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/reverseHire/career_site",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
     "aws-serverless-express": "^3.3.8",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
