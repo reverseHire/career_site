@@ -18,9 +18,13 @@ body {
 }
 
 .search-result-categories > li > a > .badge {
-  float: right;
+  float: right !important;
 }
 
+.search-result-item-heading > span {
+  color: #fff;
+  font-size: 60%;
+}
 .search-results-count {
   margin-top: 10px;
 }
@@ -52,6 +56,10 @@ body {
   width: 80% !important;
 }
 
+.btn-primary {
+  background-color: #0062cc;
+}
+
 @media (min-width: 768px) {
   .search-result-item .image-link {
     display: inline-block;
@@ -78,7 +86,8 @@ body {
 }
 
 .search-result-item .description {
-  font-size: 13px;
+  font-size: 14px;
+  font-style: italic;
 }
 
 .search-result-item + .search-result-item {

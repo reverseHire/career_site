@@ -16,140 +16,76 @@
     <div id="nav-placeholder"></div>
     <div class="container margin-top-80">
         <div class="row">
-            <div class="col-md-3">
-            </div>
             <div class="col-md-9">
                 <form class="form-inline">
                     <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search"
                         aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
                 </form>
+            </div>
+            <div class="col-md-3">
             </div>
         </div>
         <div class="row ng-scope">
-            <div class="col-md-3 col-md-push-9">
+            <div class="col-md-3 order-2">
                 <h4>Results <span class="fw-semi-bold">Filtering</span></h4>
                 <p class="text-muted fs-mini">Listed content is categorized by the following groups:</p>
-                <ul class="nav nav-pills nav-stacked search-result-categories mt">
-                    <li><a href="#">Friends <span class="badge">34</span></a>
+                <ul class="nav nav-pills flex-column search-result-categories mt-1">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Skill <span class="badge">34</span></a>
                     </li>
-                    <li><a href="#">Pages <span class="badge">9</span></a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Role <span class="badge">9</span></a>
                     </li>
-                    <li><a href="#">Images</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Location <span class="badge">18</span></a>
                     </li>
-                    <li><a href="#">Groups</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Current CTC</a>
                     </li>
-                    <li><a href="#">Globals <span class="badge">18</span></a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Expected CTC</a>
                     </li>
                 </ul>
             </div>
-            <div class="col-md-9 col-md-pull-3">
+            <div id="results-container" class="col-md-9 order-1">
                 <p class="search-results-count">About 94 700 000 (0.39 sec.) results</p>
-                <section class="search-result-item">
-                    <a class="image-link" href="#"><img class="image"
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                    </a>
-                    <div class="search-result-item-body">
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <h4 class="search-result-item-heading"><a href="#">john doe</a></h4>
-                                <p class="info">New York, NY 20188</p>
-                                <p class="description">Not just usual Metro. But something bigger. Not just usual
-                                    widgets,
-                                    but real widgets. Not just yet another admin template, but next generation admin
-                                    template.</p>
-                            </div>
-                            <div class="col-sm-3 text-align-center">
-                                <p class="value3 mt-sm">$9, 700</p>
-                                <p class="fs-mini text-muted">PER WEEK</p><a class="btn btn-primary btn-info btn-sm"
-                                    href="#">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="search-result-item">
-                    <a class="image-link" href="#"><img class="image"
-                            src="https://bootdey.com/img/Content/avatar/avatar6.png">
+                <section id="search-results-frame" class="search-result-item d-none">
+                    <a class="d-flex justify-content-center align-items-center rounded image-link"
+                        style="height: 200px; background-color: rgb(233, 236, 239);">
+                        <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
                     </a>
                     <div class="search-result-item-body">
                         <div class="row">
                             <div class="col-sm-9">
                                 <h4 class="search-result-item-heading"><a href="#">john doe</a> <span
-                                        class="badge bg-danger fw-normal pull-right">Best Deal!</span></h4>
-                                <p class="info">Los Angeles, NY 20188</p>
-                                <p class="description">You will never know exactly how something will go until you try
-                                    it.
-                                    You can think three hundred times and still have no precise result.</p>
+                                        class="badge bg-secondary font-weight-normal float-right d-none">Highly
+                                        Rated</span></h4>
+                                <p class="info"></p>
+                                <p class="description">Bio to be filled by the candidate</p>
                             </div>
                             <div class="col-sm-3 text-align-center">
-                                <p class="value3 mt-sm">$10, 300</p>
-                                <p class="fs-mini text-muted">PER WEEK</p><a class="btn btn-primary btn-info btn-sm"
-                                    href="#">Learn More</a>
+                                <p class="value3 mt-sm text-muted profile-rating-header">Profile Rating</p>
+                                <p class="fs-mini profile-rating font-weight-bold"></p>
+                                <a class="btn btn-primary btn-sm learn-more" href="#">Learn More</a>
                             </div>
                         </div>
                     </div>
                 </section>
-                <section class="search-result-item">
-                    <a class="image-link" href="#"><img class="image"
-                            src="https://bootdey.com/img/Content/avatar/avatar2.png">
-                    </a>
-                    <div class="search-result-item-body">
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <h4 class="search-result-item-heading"><a href="#">john doe</a></h4>
-                                <p class="info">New York, NY 20188</p>
-                                <p class="description">The Great Prince of the Grand Duchy of Lithuania he had stopped
-                                    the
-                                    invasion to Europe of Timur (Tamerlan) from Asia heading a big Army of Belarusians,
-                                    Lithuanians.</p>
-                            </div>
-                            <div class="col-sm-3 text-align-center">
-                                <p class="value3 mt-sm">$3, 200</p>
-                                <p class="fs-mini text-muted">PER WEEK</p><a class="btn btn-info btn-sm" href="#">Learn
-                                    More</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="search-result-item">
-                    <a class="image-link" href="#"><img class="image"
-                            src="https://bootdey.com/img/Content/avatar/avatar3.png">
-                    </a>
-                    <div class="search-result-item-body">
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <h4 class="search-result-item-heading"><a href="#">john doe</a></h4>
-                                <p class="info">Minsk, NY 20188</p>
-                                <p class="description">Yes you can! Further more, you should! It let's you create really
-                                    beautiful images either for elements or for the entire background.</p>
-                            </div>
-                            <div class="col-sm-3 text-align-center">
-                                <p class="value3 mt-sm">$2, 400</p>
-                                <p class="fs-mini text-muted">PER MONTH</p><a class="btn btn-info btn-sm" href="#">Learn
-                                    More</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <div class="text-align-center">
-                    <ul class="pagination pagination-sm">
-                        <li class="disabled"><a href="#">Prev</a>
-                        </li>
-                        <li class="active"><a href="#">1</a>
-                        </li>
-                        <li><a href="#">2</a>
-                        </li>
-                        <li><a href="#">3</a>
-                        </li>
-                        <li><a href="#">4</a>
-                        </li>
-                        <li><a href="#">5</a>
-                        </li>
-                        <li><a href="#">Next</a>
-                        </li>
-                    </ul>
-                </div>
             </div>
+        </div>
+        <div class="text-align-center mt-2">
+            <ul class="pagination pagination-sm">
+                <li class="page-item">
+                    <a class="page-link" href="#">Prev</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
